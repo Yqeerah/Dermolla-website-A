@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dermolla — Trusted Skincare, Delivered in Nigeria</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cocoa:#3D2314;--cocoa-mid:#6B3A22;--cocoa-light:#C4956A;--cocoa-pale:#F5EDE3;
+  --sage:#6B7C5E;--sage-light:#A8B99A;--sage-pale:#EDF0E8;
+  --cream:#FAF6F0;--white:#FFFFFF;--text-dark:#2A1A0E;--text-mid:#5C4033;--text-muted:#8B7355;
+}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;background:rgba(250,246,240,0.95);backdrop-filter:blur(8px);border-bottom:0.5px solid rgba(61,35,20,0.1)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;letter-spacing:0.12em;color:var(--cocoa);text-transform:uppercase;text-decoration:none}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{text-decoration:none;font-size:0.75rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-mid);font-weight:400;transition:color .2s}
+.nav-links a:hover{color:var(--cocoa)}
+.nav-cart{position:relative;cursor:pointer;background:var(--cocoa);color:var(--cream);border:none;padding:0.55rem 1.4rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.nav-cart:hover{background:var(--cocoa-mid)}
+.cart-count{position:absolute;top:-6px;right:-6px;background:var(--sage);color:white;width:18px;height:18px;border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;font-weight:500}
+.nav-wa{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);text-decoration:none;font-weight:400}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:5rem}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:5rem 3rem 5rem 4rem}
+.hero-eyebrow{font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--sage);margin-bottom:1.2rem}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,4.5rem);font-weight:300;line-height:1.08;color:var(--cocoa);margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--cocoa-light)}
+.hero-desc{font-size:0.92rem;line-height:1.85;color:var(--text-muted);max-width:420px;margin-bottom:1rem;font-weight:300}
+.brand-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2.5rem}
+.brand-pill{background:var(--white);border:0.5px solid rgba(61,35,20,0.15);color:var(--text-mid);font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.35rem 0.85rem;font-weight:400}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--cocoa);color:var(--cream);border:none;padding:1rem 2rem;font-family:'Jost',sans-serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:var(--cocoa-mid)}
+.btn-ghost{background:transparent;color:var(--cocoa);font-family:'Jost',sans-serif;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;border:none;border-bottom:1px solid var(--cocoa);cursor:pointer;padding:0.5rem 0;text-decoration:none}
+.hero-right{background:var(--cocoa-pale);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-direction:column;gap:1rem;padding:4rem 2rem}
+.hero-brands-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;max-width:360px;width:100%}
+.hero-brand-card{background:var(--white);border:0.5px solid rgba(61,35,20,0.08);padding:1rem;text-align:center;transition:border-color .2s}
+.hero-brand-card:hover{border-color:var(--cocoa-light)}
+.hero-brand-name{font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:var(--cocoa);font-weight:400;letter-spacing:0.05em}
+.hero-brand-origin{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:0.2rem}
+.hero-tag{background:var(--cocoa);color:var(--cream);padding:0.9rem 1.5rem;text-align:center;max-width:360px;width:100%}
+.hero-tag p{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.75}
+.hero-tag strong{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;display:block;margin-top:0.2rem}
+
+/* TICKER */
+.ticker{background:var(--cocoa);color:var(--cream);padding:0.85rem 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;gap:3rem;animation:ticker 22s linear infinite}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.8;flex-shrink:0}
+
+/* TRUST BAR */
+.trust{display:flex;justify-content:center;gap:0;background:var(--white);border-bottom:0.5px solid rgba(61,35,20,0.08)}
+.trust-item{flex:1;text-align:center;padding:1.8rem 1rem;border-right:0.5px solid rgba(61,35,20,0.08)}
+.trust-item:last-child{border-right:none}
+.trust-icon{font-size:1.2rem;margin-bottom:0.4rem}
+.trust-title{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--cocoa);font-weight:500;margin-bottom:0.2rem}
+.trust-sub{font-size:0.72rem;color:var(--text-muted);font-weight:300}
+
+/* SECTION SHARED */
+.section-label{font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--sage);margin-bottom:0.8rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--cocoa);line-height:1.15}
+
+/* QUIZ CTA BANNER */
+.quiz-banner{background:var(--sage-pale);border-top:0.5px solid rgba(107,124,94,0.2);border-bottom:0.5px solid rgba(107,124,94,0.2);padding:3.5rem 4rem;display:flex;align-items:center;justify-content:space-between;gap:2rem}
+.quiz-banner-left .section-title{margin-bottom:0.6rem}
+.quiz-banner-desc{font-size:0.88rem;color:var(--text-muted);font-weight:300;line-height:1.7;max-width:480px}
+.quiz-banner-right{flex-shrink:0}
+
+/* FILTERS */
+.shop{padding:5rem 4rem}
+.shop-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.filter-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.filter-btn{background:transparent;border:0.5px solid rgba(61,35,20,0.18);color:var(--text-muted);font-family:'Jost',sans-serif;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.45rem 1rem;cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{background:var(--cocoa);color:var(--cream);border-color:var(--cocoa)}
+.sort-select{background:transparent;border:0.5px solid rgba(61,35,20,0.18);color:var(--text-mid);font-family:'Jost',sans-serif;font-size:0.72rem;padding:0.45rem 1rem;cursor:pointer;outline:none}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.product-card{cursor:pointer;transition:transform .25s;position:relative}
+.product-card:hover{transform:translateY(-3px)}
+.product-card.hidden{display:none}
+.p-img{aspect-ratio:1;background:var(--cocoa-pale);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;position:relative;overflow:hidden}
+.p-img.sage{background:var(--sage-pale)}
+.p-img.white{background:#F0F0EE}
+.p-img.blue{background:#EAF2F8}
+.p-badge{position:absolute;top:0.7rem;left:0.7rem;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.25rem 0.6rem;font-weight:500}
+.badge-verified{background:var(--sage);color:white}
+.badge-popular{background:var(--cocoa);color:var(--cream)}
+.badge-korean{background:#E8D5E8;color:#5C3A5C}
+.badge-uk{background:#D5E0E8;color:#2A4A5C}
+.badge-us{background:#E8E0D5;color:#5C4A2A}
+.badge-french{background:#D5D5E8;color:#3A3A5C}
+.p-brand{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem}
+.p-name{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cocoa);font-weight:400;margin-bottom:0.3rem;line-height:1.3}
+.p-concern{font-size:0.72rem;color:var(--text-muted);font-weight:300;margin-bottom:0.6rem}
+.p-footer{display:flex;align-items:center;justify-content:space-between}
+.p-price{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cocoa);font-weight:400}
+.add-to-cart{font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;background:transparent;border:0.5px solid var(--cocoa);color:var(--cocoa);padding:0.4rem 0.9rem;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s}
+.add-to-cart:hover{background:var(--cocoa);color:var(--cream)}
+.add-to-cart.added{background:var(--sage);color:white;border-color:var(--sage)}
+
+/* PRODUCT SVG ICONS */
+.p-svg{width:64px;height:64px;opacity:0.7}
+
+/* CART DRAWER */
+.cart-overlay{position:fixed;inset:0;background:rgba(42,26,14,0.4);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;background:var(--white);z-index:201;transform:translateX(100%);transition:transform .35s ease;display:flex;flex-direction:column;border-left:0.5px solid rgba(61,35,20,0.1)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{padding:1.5rem 1.8rem;border-bottom:0.5px solid rgba(61,35,20,0.08);display:flex;align-items:center;justify-content:space-between}
+.cart-head-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cocoa);font-weight:400}
+.cart-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);line-height:1}
+.cart-items{flex:1;overflow-y:auto;padding:1.5rem 1.8rem}
+.cart-empty{text-align:center;padding:4rem 2rem;color:var(--text-muted);font-size:0.85rem;font-weight:300}
+.cart-item{display:flex;gap:1rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:0.5px solid rgba(61,35,20,0.07)}
+.cart-item-img{width:52px;height:52px;background:var(--cocoa-pale);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.cart-item-body{flex:1}
+.cart-item-brand{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage)}
+.cart-item-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--cocoa);margin-bottom:0.2rem}
+.cart-item-price{font-size:0.82rem;color:var(--text-muted);font-weight:300}
+.cart-item-remove{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;transition:color .2s}
+.cart-item-remove:hover{color:var(--cocoa)}
+.cart-footer{padding:1.5rem 1.8rem;border-top:0.5px solid rgba(61,35,20,0.1)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.cart-total-label{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted)}
+.cart-total-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cocoa)}
+.btn-checkout{width:100%;background:var(--cocoa);color:var(--cream);border:none;padding:1rem;font-family:'Jost',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-bottom:0.8rem}
+.btn-checkout:hover{background:var(--cocoa-mid)}
+.btn-wa-cart{width:100%;background:transparent;border:0.5px solid #25D366;color:#1a9e4e;padding:0.85rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-wa-cart:hover{background:#25D366;color:white}
+
+/* CHECKOUT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(42,26,14,0.5);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-head{padding:1.5rem 2rem;border-bottom:0.5px solid rgba(61,35,20,0.08);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cocoa)}
+.modal-body{padding:2rem}
+.form-group{margin-bottom:1.4rem}
+.form-label{display:block;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem}
+.form-input{width:100%;border:none;border-bottom:0.5px solid rgba(61,35,20,0.25);background:transparent;padding:0.6rem 0;font-family:'Jost',sans-serif;font-size:0.9rem;color:var(--text-dark);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--cocoa)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.modal-order-summary{background:var(--cocoa-pale);padding:1.2rem;margin-bottom:1.5rem}
+.modal-order-title{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.8rem}
+.modal-order-item{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-mid);margin-bottom:0.4rem;font-weight:300}
+.modal-order-total{display:flex;justify-content:space-between;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cocoa);border-top:0.5px solid rgba(61,35,20,0.12);padding-top:0.8rem;margin-top:0.8rem}
+.btn-place-order{width:100%;background:var(--cocoa);color:var(--cream);border:none;padding:1rem;font-family:'Jost',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-place-order:hover{background:var(--cocoa-mid)}
+
+/* SUCCESS STATE */
+.order-success{text-align:center;padding:3rem 2rem;display:none}
+.success-icon{font-size:2.5rem;margin-bottom:1rem}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--cocoa);margin-bottom:0.6rem}
+.success-desc{font-size:0.85rem;color:var(--text-muted);font-weight:300;line-height:1.7}
+
+/* BRANDS STRIP */
+.brands-strip{padding:3rem 4rem;background:var(--white);border-top:0.5px solid rgba(61,35,20,0.07);border-bottom:0.5px solid rgba(61,35,20,0.07)}
+.brands-strip-label{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text-muted);text-align:center;margin-bottom:1.5rem}
+.brands-logos{display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center}
+.brand-logo-pill{background:var(--cream);border:0.5px solid rgba(61,35,20,0.12);padding:0.5rem 1.2rem;font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--cocoa);font-weight:400;letter-spacing:0.05em}
+
+/* FOOTER */
+footer{background:var(--text-dark);color:rgba(250,246,240,0.55);padding:3rem 4rem 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cream);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem}
+.footer-desc{font-size:0.78rem;font-weight:300;line-height:1.7;max-width:280px}
+.footer-heading{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(250,246,240,0.4);margin-bottom:1rem}
+.footer-links-list{list-style:none}
+.footer-links-list li{margin-bottom:0.5rem}
+.footer-links-list a{color:rgba(250,246,240,0.5);text-decoration:none;font-size:0.8rem;font-weight:300;transition:color .2s}
+.footer-links-list a:hover{color:var(--cream)}
+.footer-bottom{border-top:0.5px solid rgba(250,246,240,0.08);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;font-weight:300}
+.footer-wa{color:#25D366;text-decoration:none;font-size:0.75rem;letter-spacing:0.1em}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{gap:1rem}
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:6rem 1.5rem 2rem}
+  .hero-right{padding:2rem 1.5rem;min-height:300px}
+  .quiz-banner{flex-direction:column;padding:2.5rem 1.5rem;text-align:center}
+  .shop{padding:3rem 1.5rem}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .cart-drawer{width:100%}
+  .footer-top{grid-template-columns:1fr}
+  footer{padding:2rem 1.5rem}
+  .trust{flex-wrap:wrap}
+  .trust-item{min-width:50%;border-bottom:0.5px solid rgba(61,35,20,0.08)}
+  .brands-strip{padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="index.html">Dermolla</a>
+  <ul class="nav-links">
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="dermolla-skin-quiz.html">Skin Quiz</a></li>
+    <li><a href="#" class="nav-wa" onclick="openWA()">💬 WhatsApp</a></li>
+    <li><button class="nav-cart" onclick="toggleCart()">Cart <span class="cart-count" id="cart-count">0</span></button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Nigeria's curated skincare destination</p>
+    <h1 class="hero-title">Real products.<br><em>Real results.</em><br>Delivered to you.</h1>
+    <p class="hero-desc">Dermolla brings you 100% authentic skincare from Korea, UK, USA, France, Japan and Nigeria — verified, curated, and shipped straight to your door.</p>
+    <div class="brand-pills">
+      <span class="brand-pill">CeraVe</span>
+      <span class="brand-pill">COSRX</span>
+      <span class="brand-pill">Medicube</span>
+      <span class="brand-pill">La Roche-Posay</span>
+      <span class="brand-pill">The Ordinary</span>
+      <span class="brand-pill">Anua</span>
+      <span class="brand-pill">Face Facts</span>
+      <span class="brand-pill">+ more</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#shop">Shop Now</a>
+      <a class="btn-ghost" href="dermolla-skin-quiz.html">Take Skin Quiz →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-brands-grid">
+      <div class="hero-brand-card"><p class="hero-brand-name">CeraVe</p><p class="hero-brand-origin">🇺🇸 USA</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">COSRX</p><p class="hero-brand-origin">🇰🇷 Korea</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">Medicube</p><p class="hero-brand-origin">🇰🇷 Korea</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">La Roche-Posay</p><p class="hero-brand-origin">🇫🇷 France</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">The Ordinary</p><p class="hero-brand-origin">🇬🇧 UK</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">Skin Aqua</p><p class="hero-brand-origin">🇯🇵 Japan</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">Anua</p><p class="hero-brand-origin">🇰🇷 Korea</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">Simple</p><p class="hero-brand-origin">🇬🇧 UK</p></div>
+      <div class="hero-brand-card"><p class="hero-brand-name">Face Facts</p><p class="hero-brand-origin">🇬🇧 UK</p></div>
+    </div>
+    <div class="hero-tag">
+      <p>All products</p>
+      <strong>100% Authentic — Zero Fakes</strong>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">✦ Free delivery on orders over ₦30,000</span>
+    <span class="ticker-item">✦ 100% Authentic products</span>
+    <span class="ticker-item">✦ Korean skincare specialists</span>
+    <span class="ticker-item">✦ WhatsApp enquiries welcome</span>
+    <span class="ticker-item">✦ Lagos & Abuja same-day available</span>
+    <span class="ticker-item">✦ Nationwide delivery</span>
+    <span class="ticker-item">✦ Free delivery on orders over ₦30,000</span>
+    <span class="ticker-item">✦ 100% Authentic products</span>
+    <span class="ticker-item">✦ Korean skincare specialists</span>
+    <span class="ticker-item">✦ WhatsApp enquiries welcome</span>
+    <span class="ticker-item">✦ Lagos & Abuja same-day available</span>
+    <span class="ticker-item">✦ Nationwide delivery</span>
+  </div>
+</div>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="trust-item"><div class="trust-icon">✅</div><p class="trust-title">100% Authentic</p><p class="trust-sub">Direct from verified suppliers</p></div>
+  <div class="trust-item"><div class="trust-icon">🌍</div><p class="trust-title">6 Countries</p><p class="trust-sub">Korea · UK · USA · France · Japan · Nigeria</p></div>
+  <div class="trust-item"><div class="trust-icon">🚚</div><p class="trust-title">Nationwide Delivery</p><p class="trust-sub">Lagos, Abuja & all 36 states</p></div>
+  <div class="trust-item"><div class="trust-icon">💬</div><p class="trust-title">Expert Guidance</p><p class="trust-sub">Skin quiz + WhatsApp support</p></div>
+</div>
+
+<!-- QUIZ BANNER -->
+<section class="quiz-banner">
+  <div class="quiz-banner-left">
+    <p class="section-label">Not sure what to buy?</p>
+    <h2 class="section-title">Let our AI find<br>your perfect routine</h2>
+    <p class="quiz-banner-desc">Answer 6 questions about your skin and get a personalized product recommendation — matched to your skin type, concerns, and budget.</p>
+  </div>
+  <div class="quiz-banner-right">
+    <a class="btn-primary" href="dermolla-skin-quiz.html">Take the Free Skin Quiz →</a>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="shop" id="shop">
+  <div class="shop-header">
+    <div>
+      <p class="section-label">Our collection</p>
+      <h2 class="section-title">Shop by concern</h2>
+    </div>
+    <select class="sort-select" onchange="sortProducts(this.value)">
+      <option value="">Sort: Default</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+    </select>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('all',this)">All Products</button>
+    <button class="filter-btn" onclick="filterProducts('sunscreen',this)">☀️ Sunscreen</button>
+    <button class="filter-btn" onclick="filterProducts('moisturiser',this)">💧 Moisturiser</button>
+    <button class="filter-btn" onclick="filterProducts('serum',this)">✨ Serum</button>
+    <button class="filter-btn" onclick="filterProducts('cleanser',this)">🧴 Cleanser</button>
+    <button class="filter-btn" onclick="filterProducts('acne',this)">🎯 Acne</button>
+    <button class="filter-btn" onclick="filterProducts('brightening',this)">🌟 Brightening</button>
+    <button class="filter-btn" onclick="filterProducts('body',this)">🧖 Body</button>
+    <button class="filter-btn" onclick="filterProducts('korean',this)">🇰🇷 Korean</button>
+    <button class="filter-btn" onclick="filterProducts('uk',this)">🇬🇧 UK</button>
+  </div>
+
+  <div class="product-grid" id="product-grid">
+
+    <div class="product-card" data-tags="moisturiser,us,dryness" data-price="23000">
+      <div class="p-img">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="18" y="12" width="28" height="44" rx="4" fill="#C4956A" opacity="0.5"/><rect x="22" y="24" width="20" height="24" rx="1" fill="white" opacity="0.7"/><text x="32" y="36" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">CeraVe</text><rect x="24" y="6" width="16" height="8" rx="2" fill="#6B3A22" opacity="0.6"/></svg>
+      </div>
+      <p class="p-brand">CeraVe</p>
+      <p class="p-name">Moisturising Cream</p>
+      <p class="p-concern">Dryness · All skin types</p>
+      <div class="p-footer"><span class="p-price">₦23,000</span><button class="add-to-cart" onclick="addToCart(this,'CeraVe','Moisturising Cream',23000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="serum,korean,brightening,dryness" data-price="16500">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="46" rx="4" fill="#A8B99A" opacity="0.55"/><rect x="24" y="22" width="16" height="26" rx="1" fill="white" opacity="0.7"/><text x="32" y="34" text-anchor="middle" font-family="Jost" font-size="4.5" fill="#3D2314">COSRX</text><rect x="24" y="4" width="16" height="8" rx="3" fill="#6B7C5E" opacity="0.6"/></svg>
+      </div>
+      <p class="p-brand">COSRX</p>
+      <p class="p-name">Snail Mucin Essence</p>
+      <p class="p-concern">Hydration · Repair · Glow</p>
+      <div class="p-footer"><span class="p-price">₦16,500</span><button class="add-to-cart" onclick="addToCart(this,'COSRX','Snail Mucin Essence',16500)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="serum,korean,brightening,acne" data-price="25000">
+      <div class="p-img">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="22" y="8" width="20" height="48" rx="4" fill="#C4956A" opacity="0.55"/><rect x="25" y="20" width="14" height="28" rx="1" fill="white" opacity="0.7"/><text x="32" y="32" text-anchor="middle" font-family="Jost" font-size="4" fill="#3D2314">medicube</text><rect x="26" y="2" width="12" height="8" rx="2" fill="#6B3A22" opacity="0.7"/></svg>
+      </div>
+      <p class="p-brand">Medicube</p>
+      <p class="p-name">Red Serum</p>
+      <p class="p-concern">Brightening · Anti-aging</p>
+      <div class="p-footer"><span class="p-price">₦25,000</span><button class="add-to-cart" onclick="addToCart(this,'Medicube','Red Serum',25000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="sunscreen,korean" data-price="15000">
+      <div class="p-img blue">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="36" rx="14" fill="#A8C4D4" opacity="0.6"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="4.5" fill="#2A4A5C">Skin Aqua</text><text x="32" y="44" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#2A4A5C">SPF 50+</text></svg>
+      </div>
+      <p class="p-brand">Skin Aqua</p>
+      <p class="p-name">UV Moisture Sunscreen</p>
+      <p class="p-concern">Sun protection · SPF 50+</p>
+      <div class="p-footer"><span class="p-price">₦15,000</span><button class="add-to-cart" onclick="addToCart(this,'Skin Aqua','UV Moisture Sunscreen',15000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="brightening,serum,us" data-price="16000">
+      <div class="p-img">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="46" rx="4" fill="#E8C87A" opacity="0.5"/><rect x="24" y="24" width="16" height="24" rx="1" fill="white" opacity="0.7"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#3D2314">Advanced</text><text x="32" y="43" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#3D2314">Clinicals</text></svg>
+      </div>
+      <p class="p-brand">Advanced Clinicals</p>
+      <p class="p-name">Vitamin C Serum</p>
+      <p class="p-concern">Brightening · Dark spots</p>
+      <div class="p-footer"><span class="p-price">₦16,000</span><button class="add-to-cart" onclick="addToCart(this,'Advanced Clinicals','Vitamin C Serum',16000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="moisturiser,korean" data-price="18500">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="14" y="18" width="36" height="32" rx="6" fill="#A8B99A" opacity="0.55"/><rect x="18" y="24" width="28" height="20" rx="2" fill="white" opacity="0.65"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="4" fill="#3D2314">COSRX</text></svg>
+      </div>
+      <p class="p-brand">COSRX</p>
+      <p class="p-name">Snail All in One Cream</p>
+      <p class="p-concern">Hydration · Repair · Soothing</p>
+      <div class="p-footer"><span class="p-price">₦18,500</span><button class="add-to-cart" onclick="addToCart(this,'COSRX','Snail All in One Cream',18500)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="serum,korean,brightening,acne" data-price="15000">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="46" rx="4" fill="#A8B99A" opacity="0.5"/><rect x="24" y="24" width="16" height="22" rx="1" fill="white" opacity="0.7"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Tiam</text></svg>
+      </div>
+      <p class="p-brand">Tiam</p>
+      <p class="p-name">Vita B3 Source</p>
+      <p class="p-concern">Niacinamide · Pores · Brightening</p>
+      <div class="p-footer"><span class="p-price">₦15,000</span><button class="add-to-cart" onclick="addToCart(this,'Tiam','Vita B3 Source',15000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="sunscreen,french" data-price="23000">
+      <div class="p-img blue">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="18" y="12" width="28" height="44" rx="4" fill="#A8BAD4" opacity="0.55"/><rect x="22" y="24" width="20" height="24" rx="1" fill="white" opacity="0.7"/><text x="32" y="33" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#2A3A5C">La Roche-</text><text x="32" y="40" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#2A3A5C">Posay</text></svg>
+      </div>
+      <p class="p-brand">La Roche-Posay</p>
+      <p class="p-name">Anthelios Sunscreen</p>
+      <p class="p-concern">SPF 50+ · Sensitive skin</p>
+      <div class="p-footer"><span class="p-price">₦23,000</span><button class="add-to-cart" onclick="addToCart(this,'La Roche-Posay','Anthelios Sunscreen',23000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="sunscreen,korean" data-price="12999">
+      <div class="p-img blue">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="16" y="14" width="32" height="38" rx="12" fill="#B8D4E8" opacity="0.6"/><text x="32" y="33" text-anchor="middle" font-family="Jost" font-size="4" fill="#2A4A5C">Misha</text><text x="32" y="42" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#2A4A5C">Aqua</text></svg>
+      </div>
+      <p class="p-brand">Missha</p>
+      <p class="p-name">Aqua Sun Essence</p>
+      <p class="p-concern">SPF 50+ · Lightweight</p>
+      <div class="p-footer"><span class="p-price">₦12,999</span><button class="add-to-cart" onclick="addToCart(this,'Missha','Aqua Sun Essence',12999)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="serum,uk,brightening" data-price="30000">
+      <div class="p-img white">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="22" y="8" width="20" height="50" rx="3" fill="#D0D0D0" opacity="0.55"/><rect x="25" y="20" width="14" height="28" rx="1" fill="white" opacity="0.8"/><text x="32" y="32" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#3D2314">The</text><text x="32" y="39" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#3D2314">Ordinary</text></svg>
+      </div>
+      <p class="p-brand">The Ordinary</p>
+      <p class="p-name">Glycolic Acid 7%</p>
+      <p class="p-concern">Exfoliation · Texture · Glow</p>
+      <div class="p-footer"><span class="p-price">₦30,000</span><button class="add-to-cart" onclick="addToCart(this,'The Ordinary','Glycolic Acid 7%',30000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="moisturiser,uk" data-price="6000">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="14" y="18" width="36" height="32" rx="6" fill="#A8B99A" opacity="0.5"/><rect x="18" y="24" width="28" height="18" rx="2" fill="white" opacity="0.65"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Simple</text></svg>
+      </div>
+      <p class="p-brand">Simple</p>
+      <p class="p-name">Hydrating Light Moisturiser</p>
+      <p class="p-concern">Sensitive skin · Lightweight</p>
+      <div class="p-footer"><span class="p-price">₦6,000</span><button class="add-to-cart" onclick="addToCart(this,'Simple','Hydrating Light Moisturiser',6000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="cleanser,uk" data-price="5500">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="18" y="12" width="28" height="44" rx="4" fill="#A8B99A" opacity="0.5"/><rect x="22" y="24" width="20" height="24" rx="1" fill="white" opacity="0.65"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Simple</text></svg>
+      </div>
+      <p class="p-brand">Simple</p>
+      <p class="p-name">Refreshing Facial Wash</p>
+      <p class="p-concern">Gentle · Sensitive skin</p>
+      <div class="p-footer"><span class="p-price">₦5,500</span><button class="add-to-cart" onclick="addToCart(this,'Simple','Refreshing Facial Wash',5500)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="cleanser,brightening" data-price="6000">
+      <div class="p-img">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="36" rx="8" fill="#E8C87A" opacity="0.55"/><rect x="20" y="22" width="24" height="24" rx="4" fill="white" opacity="0.65"/><text x="32" y="36" text-anchor="middle" font-family="Jost" font-size="4.5" fill="#5C4A2A">Kojie</text></svg>
+      </div>
+      <p class="p-brand">Kojie San</p>
+      <p class="p-name">Skin Lightening Soap</p>
+      <p class="p-concern">Brightening · Dark spots</p>
+      <div class="p-footer"><span class="p-price">₦6,000</span><button class="add-to-cart" onclick="addToCart(this,'Kojie San','Skin Lightening Soap',6000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="cleanser,acne,us" data-price="19900">
+      <div class="p-img white">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="18" y="12" width="28" height="44" rx="4" fill="#D0E8D0" opacity="0.6"/><rect x="22" y="24" width="20" height="24" rx="1" fill="white" opacity="0.7"/><text x="32" y="34" text-anchor="middle" font-family="Jost" font-size="4" fill="#2A5C2A">PanOxyl</text></svg>
+      </div>
+      <p class="p-brand">PanOxyl</p>
+      <p class="p-name">Acne Foaming Wash</p>
+      <p class="p-concern">Acne · Benzoyl peroxide 4%</p>
+      <div class="p-footer"><span class="p-price">₦19,900</span><button class="add-to-cart" onclick="addToCart(this,'PanOxyl','Acne Foaming Wash',19900)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="serum,acne,brightening" data-price="6500">
+      <div class="p-img white">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="46" rx="4" fill="#E0D0C0" opacity="0.55"/><rect x="24" y="24" width="16" height="24" rx="1" fill="white" opacity="0.7"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="3.5" fill="#3D2314">Menarini</text></svg>
+      </div>
+      <p class="p-brand">Menarini</p>
+      <p class="p-name">Tretinoin 0.05%</p>
+      <p class="p-concern">Acne · Anti-aging · Rx strength</p>
+      <div class="p-footer"><span class="p-price">₦6,500</span><button class="add-to-cart" onclick="addToCart(this,'Menarini','Tretinoin 0.05%',6500)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="body,us" data-price="20000">
+      <div class="p-img">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="14" y="18" width="36" height="36" rx="8" fill="#C4956A" opacity="0.45"/><rect x="18" y="24" width="28" height="24" rx="4" fill="white" opacity="0.65"/><text x="32" y="38" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Olay</text></svg>
+      </div>
+      <p class="p-brand">Olay</p>
+      <p class="p-name">Body Lotion</p>
+      <p class="p-concern">Body · Moisture · Firming</p>
+      <div class="p-footer"><span class="p-price">₦20,000</span><button class="add-to-cart" onclick="addToCart(this,'Olay','Body Lotion',20000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="body,us" data-price="25000">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="18" ry="22" fill="#A8B99A" opacity="0.5"/><ellipse cx="32" cy="32" rx="14" ry="18" fill="white" opacity="0.65"/><text x="32" y="33" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">EOS</text></svg>
+      </div>
+      <p class="p-brand">EOS</p>
+      <p class="p-name">Body Lotion</p>
+      <p class="p-concern">Body · 24hr moisture</p>
+      <div class="p-footer"><span class="p-price">₦25,000</span><button class="add-to-cart" onclick="addToCart(this,'EOS','Body Lotion',25000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="uk,moisturiser,brightening,cleanser" data-price="5250">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="16" y="14" width="32" height="40" rx="6" fill="#A8B99A" opacity="0.5"/><rect x="20" y="22" width="24" height="24" rx="2" fill="white" opacity="0.65"/><text x="32" y="34" text-anchor="middle" font-family="Jost" font-size="4" fill="#3D2314">Face</text><text x="32" y="42" text-anchor="middle" font-family="Jost" font-size="4" fill="#3D2314">Facts</text></svg>
+      </div>
+      <p class="p-brand">Face Facts</p>
+      <p class="p-name">Skincare Range</p>
+      <p class="p-concern">Multiple variants available</p>
+      <div class="p-footer"><span class="p-price">From ₦5,250</span><button class="add-to-cart" onclick="addToCart(this,'Face Facts','Skincare Range',5250)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="korean,serum,brightening,acne" data-price="16000">
+      <div class="p-img sage">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="20" y="10" width="24" height="46" rx="4" fill="#A8B99A" opacity="0.55"/><rect x="24" y="24" width="16" height="22" rx="1" fill="white" opacity="0.7"/><text x="32" y="37" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Anua</text></svg>
+      </div>
+      <p class="p-brand">Anua</p>
+      <p class="p-name">Heartleaf Collection</p>
+      <p class="p-concern">Soothing · Acne · Sensitive skin</p>
+      <div class="p-footer"><span class="p-price">₦16,000</span><button class="add-to-cart" onclick="addToCart(this,'Anua','Heartleaf Collection',16000)">Add</button></div>
+    </div>
+
+    <div class="product-card" data-tags="body" data-price="7000">
+      <div class="p-img white">
+        <svg class="p-svg" viewBox="0 0 64 64"><rect x="16" y="14" width="32" height="38" rx="6" fill="#D0D8E0" opacity="0.6"/><rect x="20" y="22" width="24" height="22" rx="2" fill="white" opacity="0.65"/><text x="32" y="35" text-anchor="middle" font-family="Jost" font-size="5" fill="#3D2314">Nivea</text></svg>
+      </div>
+      <p class="p-brand">Nivea</p>
+      <p class="p-name">Body Lotion</p>
+      <p class="p-concern">Body · Daily moisture</p>
+      <div class="p-footer"><span class="p-price">₦7,000</span><button class="add-to-cart" onclick="addToCart(this,'Nivea','Body Lotion',7000)">Add</button></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BRANDS STRIP -->
+<section class="brands-strip">
+  <p class="brands-strip-label">Brands we carry</p>
+  <div class="brands-logos">
+    <span class="brand-logo-pill">CeraVe</span>
+    <span class="brand-logo-pill">COSRX</span>
+    <span class="brand-logo-pill">Medicube</span>
+    <span class="brand-logo-pill">La Roche-Posay</span>
+    <span class="brand-logo-pill">The Ordinary</span>
+    <span class="brand-logo-pill">Skin Aqua</span>
+    <span class="brand-logo-pill">Anua</span>
+    <span class="brand-logo-pill">Tiam</span>
+    <span class="brand-logo-pill">Simple</span>
+    <span class="brand-logo-pill">Face Facts</span>
+    <span class="brand-logo-pill">PanOxyl</span>
+    <span class="brand-logo-pill">Missha</span>
+    <span class="brand-logo-pill">Olay</span>
+    <span class="brand-logo-pill">EOS</span>
+    <span class="brand-logo-pill">Kojie San</span>
+    <span class="brand-logo-pill">Menarini</span>
+    <span class="brand-logo-pill">Nivea</span>
+    <span class="brand-logo-pill">Advanced Clinicals</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <p class="footer-brand">Dermolla</p>
+      <p class="footer-desc">Nigeria's trusted destination for 100% authentic skincare from Korea, UK, USA, France and Japan. We curate, verify, and deliver directly to your door.</p>
+    </div>
+    <div>
+      <p class="footer-heading">Shop</p>
+      <ul class="footer-links-list">
+        <li><a href="#shop">All Products</a></li>
+        <li><a href="dermolla-skin-quiz.html">Skin Quiz</a></li>
+        <li><a href="#shop">Korean Skincare</a></li>
+        <li><a href="#shop">Sunscreens</a></li>
+        <li><a href="#shop">Body Care</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Support</p>
+      <ul class="footer-links-list">
+        <li><a href="#" onclick="openWA()">WhatsApp Us</a></li>
+        <li><a href="#">Delivery Info</a></li>
+        <li><a href="#">Returns Policy</a></li>
+        <li><a href="#">Authenticity Guarantee</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Dermolla. All rights reserved.</span>
+    <a class="footer-wa" href="#" onclick="openWA()">💬 Chat on WhatsApp: 09060263056</a>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-head">
+    <p class="cart-head-title">Your Cart</p>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty">Your cart is empty.<br>Add products to get started.</p>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cart-total">₦0</span>
+    </div>
+    <button class="btn-checkout" onclick="openCheckout()">Proceed to Checkout →</button>
+    <button class="btn-wa-cart" onclick="orderViaWA()">💬 Order via WhatsApp instead</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <p class="modal-title">Complete Your Order</p>
+      <button class="cart-close" onclick="closeCheckout()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <div class="modal-order-summary" id="modal-summary"></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="f-name" placeholder="Your full name"></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" id="f-phone" placeholder="e.g. 08012345678"></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="f-email" placeholder="you@example.com"></div>
+      <div class="form-group"><label class="form-label">Delivery Address</label><input class="form-input" type="text" id="f-address" placeholder="Street, City, State"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">State</label><input class="form-input" type="text" id="f-state" placeholder="e.g. Lagos"></div>
+        <div class="form-group"><label class="form-label">Landmark</label><input class="form-input" type="text" id="f-landmark" placeholder="Optional"></div>
+      </div>
+      <button class="btn-place-order" onclick="placeOrder()">Place Order — Send via WhatsApp →</button>
+    </div>
+    <div class="order-success" id="order-success">
+      <div class="success-icon">🌿</div>
+      <h3 class="success-title">Order Sent!</h3>
+      <p class="success-desc">Your order has been sent to Dermolla via WhatsApp. We'll confirm your order and delivery details shortly.<br><br>Thank you for shopping with us!</p>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart = [];
+
+function toggleCart() {
+  document.getElementById('cart-drawer').classList.toggle('open');
+  document.getElementById('cart-overlay').classList.toggle('open');
+}
+
+function addToCart(btn, brand, name, price) {
+  const existing = cart.find(i => i.brand === brand && i.name === name);
+  if (existing) { existing.qty++; }
+  else { cart.push({ brand, name, price, qty: 1 }); }
+  btn.textContent = '✓ Added';
+  btn.classList.add('added');
+  setTimeout(() => { btn.textContent = 'Add'; btn.classList.remove('added'); }, 1800);
+  updateCartUI();
+  toggleCart();
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-count').textContent = count;
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById('cart-total').textContent = '₦' + total.toLocaleString();
+  const el = document.getElementById('cart-items');
+  const footer = document.getElementById('cart-footer');
+  if (cart.length === 0) {
+    el.innerHTML = '<p class="cart-empty">Your cart is empty.<br>Add products to get started.</p>';
+    footer.style.display = 'none';
+    return;
+  }
+  footer.style.display = 'block';
+  el.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <svg width="32" height="32" viewBox="0 0 32 32"><rect x="6" y="4" width="20" height="26" rx="3" fill="#C4956A" opacity="0.4"/></svg>
+      </div>
+      <div class="cart-item-body">
+        <p class="cart-item-brand">${item.brand}</p>
+        <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-price">₦${item.price.toLocaleString()} × ${item.qty}</p>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
+    </div>`).join('');
+}
+
+function openCheckout() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById('modal-summary').innerHTML = `
+    <p class="modal-order-title">Order Summary</p>
+    ${cart.map(i => `<div class="modal-order-item"><span>${i.brand} ${i.name} ×${i.qty}</span><span>₦${(i.price*i.qty).toLocaleString()}</span></div>`).join('')}
+    <div class="modal-order-total"><span>Total</span><span>₦${total.toLocaleString()}</span></div>`;
+  document.getElementById('checkout-modal').classList.add('open');
+  document.getElementById('modal-body').style.display = 'block';
+  document.getElementById('order-success').style.display = 'none';
+  toggleCart();
+}
+
+function closeCheckout() {
+  document.getElementById('checkout-modal').classList.remove('open');
+}
+
+function placeOrder() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const address = document.getElementById('f-address').value.trim();
+  if (!name || !phone || !address) { alert('Please fill in your name, phone number, and delivery address.'); return; }
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const items = cart.map(i => `• ${i.brand} ${i.name} ×${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n');
+  const state = document.getElementById('f-state').value;
+  const email = document.getElementById('f-email').value;
+  const landmark = document.getElementById('f-landmark').value;
+  const msg = encodeURIComponent(
+`🛍 New Dermolla Order
+
+Customer: ${name}
+Phone: ${phone}
+Email: ${email || 'Not provided'}
+Address: ${address}${state ? ', ' + state : ''}${landmark ? '\nLandmark: ' + landmark : ''}
+
+Order:
+${items}
+
+Total: ₦${total.toLocaleString()}
+
+Please confirm this order. Thank you!`);
+  window.open(`https://wa.me/2349060263056?text=${msg}`, '_blank');
+  document.getElementById('modal-body').style.display = 'none';
+  document.getElementById('order-success').style.display = 'block';
+  cart = [];
+  updateCartUI();
+}
+
+function orderViaWA() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const items = cart.map(i => `• ${i.brand} ${i.name} ×${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n');
+  const msg = encodeURIComponent(`Hi Dermolla! I'd like to order:\n\n${items}\n\nTotal: ₦${total.toLocaleString()}\n\nPlease assist!`);
+  window.open(`https://wa.me/2349060263056?text=${msg}`, '_blank');
+}
+
+function openWA() {
+  window.open('https://wa.me/2349060263056?text=Hi%20Dermolla!%20I%20have%20an%20enquiry%20about%20your%20products.', '_blank');
+}
+
+function filterProducts(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card => {
+    if (tag === 'all' || card.dataset.tags.includes(tag)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+function sortProducts(order) {
+  const grid = document.getElementById('product-grid');
+  const cards = Array.from(grid.querySelectorAll('.product-card'));
+  cards.sort((a, b) => {
+    const pa = parseInt(a.dataset.price), pb = parseInt(b.dataset.price);
+    return order === 'low' ? pa - pb : order === 'high' ? pb - pa : 0;
+  });
+  cards.forEach(c => grid.appendChild(c));
+}
+</script>
+</body>
+</html>

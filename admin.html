@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dermolla Admin — Product Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cocoa:#3D2314;--cocoa-mid:#6B3A22;--cocoa-light:#C4956A;--cocoa-pale:#F5EDE3;
+  --sage:#6B7C5E;--sage-light:#A8B99A;--sage-pale:#EDF0E8;
+  --cream:#FAF6F0;--white:#FFFFFF;--text-dark:#2A1A0E;--text-mid:#5C4033;--text-muted:#8B7355;
+  --danger:#C0392B;--danger-pale:#FDECEA;
+}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-box{background:var(--white);border:0.5px solid rgba(61,35,20,0.1);padding:3rem 2.5rem;width:100%;max-width:400px;text-align:center}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cocoa);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.3rem}
+.login-sub{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2.5rem}
+.login-label{display:block;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;text-align:left}
+.login-input{width:100%;border:none;border-bottom:0.5px solid rgba(61,35,20,0.25);background:transparent;padding:0.7rem 0;font-family:'Jost',sans-serif;font-size:1rem;color:var(--text-dark);outline:none;text-align:center;letter-spacing:0.3em;margin-bottom:1.8rem;transition:border-color .2s}
+.login-input:focus{border-color:var(--cocoa)}
+.btn-login{width:100%;background:var(--cocoa);color:var(--cream);border:none;padding:1rem;font-family:'Jost',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-login:hover{background:var(--cocoa-mid)}
+.login-error{color:var(--danger);font-size:0.78rem;margin-top:1rem;display:none}
+
+/* ADMIN LAYOUT */
+#admin-screen{display:none}
+.admin-nav{background:var(--cocoa);color:var(--cream);padding:1rem 2.5rem;display:flex;align-items:center;justify-content:space-between}
+.admin-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:0.12em;text-transform:uppercase}
+.admin-nav-right{display:flex;align-items:center;gap:1.5rem}
+.admin-badge{background:rgba(255,255,255,0.12);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.35rem 0.8rem;color:rgba(250,246,240,0.7)}
+.btn-logout{background:transparent;border:0.5px solid rgba(250,246,240,0.3);color:rgba(250,246,240,0.7);font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.35rem 0.9rem;cursor:pointer;transition:all .2s}
+.btn-logout:hover{border-color:rgba(250,246,240,0.7);color:var(--cream)}
+.btn-view-store{background:var(--sage);color:white;border:none;font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.4rem 1rem;cursor:pointer;text-decoration:none;display:inline-block}
+
+.admin-body{display:grid;grid-template-columns:380px 1fr;min-height:calc(100vh - 56px)}
+
+/* ADD / EDIT FORM PANEL */
+.form-panel{background:var(--white);border-right:0.5px solid rgba(61,35,20,0.08);padding:2rem;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:0}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cocoa);margin-bottom:0.3rem}
+.panel-sub{font-size:0.72rem;color:var(--text-muted);font-weight:300;margin-bottom:2rem}
+
+.form-group{margin-bottom:1.3rem}
+.form-label{display:block;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.45rem}
+.form-label span{color:var(--danger);margin-left:2px}
+.form-input,.form-select,.form-textarea{width:100%;border:0.5px solid rgba(61,35,20,0.15);background:var(--cream);padding:0.65rem 0.85rem;font-family:'Jost',sans-serif;font-size:0.88rem;color:var(--text-dark);outline:none;transition:border-color .2s;border-radius:0}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--cocoa);background:var(--white)}
+.form-textarea{resize:vertical;min-height:70px;line-height:1.5}
+.form-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238B7355'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.85rem center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.price-wrap{position:relative}
+.price-prefix{position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:0.88rem;color:var(--text-muted);pointer-events:none}
+.price-input{padding-left:2rem !important}
+
+.btn-save{width:100%;background:var(--cocoa);color:var(--cream);border:none;padding:0.95rem;font-family:'Jost',sans-serif;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-top:0.5rem}
+.btn-save:hover{background:var(--cocoa-mid)}
+.btn-cancel-edit{width:100%;background:transparent;border:0.5px solid rgba(61,35,20,0.2);color:var(--text-muted);font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem;cursor:pointer;margin-top:0.6rem;transition:all .2s;display:none}
+.btn-cancel-edit:hover{border-color:var(--cocoa);color:var(--cocoa)}
+
+.form-divider{border:none;border-top:0.5px solid rgba(61,35,20,0.08);margin:1.5rem 0}
+
+/* STOCK PANEL */
+.stock-list-panel{padding:2rem;overflow-y:auto}
+.stock-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.stock-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cocoa)}
+.stock-count{font-size:0.72rem;color:var(--text-muted);font-weight:300;margin-top:0.15rem}
+.search-input{border:0.5px solid rgba(61,35,20,0.15);background:var(--white);padding:0.55rem 1rem;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--text-dark);outline:none;width:220px;transition:border-color .2s}
+.search-input:focus{border-color:var(--cocoa)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:2rem}
+.stat-card{background:var(--white);border:0.5px solid rgba(61,35,20,0.08);padding:1.1rem}
+.stat-label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--cocoa);font-weight:400}
+
+/* PRODUCT TABLE */
+.product-table{width:100%;border-collapse:collapse}
+.product-table th{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);font-weight:400;padding:0.7rem 0.8rem;text-align:left;border-bottom:0.5px solid rgba(61,35,20,0.1);background:var(--white);position:sticky;top:0}
+.product-table td{padding:0.9rem 0.8rem;border-bottom:0.5px solid rgba(61,35,20,0.06);font-size:0.84rem;color:var(--text-mid);vertical-align:middle}
+.product-table tr:hover td{background:var(--cocoa-pale)}
+.product-table tr.editing td{background:var(--sage-pale)}
+.td-brand{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage)}
+.td-name{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cocoa);font-weight:400}
+.td-price{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cocoa);white-space:nowrap}
+.td-concern{font-size:0.75rem;color:var(--text-muted);font-weight:300}
+.stock-pill{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.25rem 0.65rem;font-weight:500}
+.in-stock{background:var(--sage-pale);color:var(--sage)}
+.low-stock{background:#FFF3CD;color:#856404}
+.out-stock{background:var(--danger-pale);color:var(--danger)}
+.action-btn{background:none;border:none;cursor:pointer;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.35rem 0.7rem;font-family:'Jost',sans-serif;transition:all .2s}
+.btn-edit{color:var(--cocoa);border:0.5px solid rgba(61,35,20,0.2)}
+.btn-edit:hover{background:var(--cocoa);color:var(--cream)}
+.btn-delete{color:var(--danger);border:0.5px solid rgba(192,57,43,0.2);margin-left:0.4rem}
+.btn-delete:hover{background:var(--danger);color:white}
+
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-muted)}
+.empty-icon{font-size:2rem;margin-bottom:1rem}
+.empty-text{font-size:0.85rem;font-weight:300;line-height:1.7}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--cocoa);color:var(--cream);padding:0.9rem 1.5rem;font-size:0.78rem;letter-spacing:0.1em;transform:translateY(100px);opacity:0;transition:all .35s;z-index:999;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.sage{background:var(--sage)}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;background:rgba(42,26,14,0.45);z-index:500;display:none;align-items:center;justify-content:center}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--white);padding:2rem;max-width:360px;width:90%;text-align:center}
+.confirm-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--cocoa);margin-bottom:0.6rem}
+.confirm-desc{font-size:0.82rem;color:var(--text-muted);font-weight:300;line-height:1.6;margin-bottom:1.5rem}
+.confirm-actions{display:flex;gap:0.8rem;justify-content:center}
+.btn-confirm-del{background:var(--danger);color:white;border:none;padding:0.7rem 1.5rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer}
+.btn-confirm-cancel{background:transparent;border:0.5px solid rgba(61,35,20,0.2);color:var(--text-muted);padding:0.7rem 1.5rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer}
+
+@media(max-width:900px){
+  .admin-body{grid-template-columns:1fr}
+  .form-panel{position:static;max-height:none;border-right:none;border-bottom:0.5px solid rgba(61,35,20,0.08)}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <p class="login-logo">Dermolla</p>
+    <p class="login-sub">Admin · Product Manager</p>
+    <label class="login-label">Enter your PIN</label>
+    <input class="login-input" type="password" id="pin-input" maxlength="6" placeholder="······" onkeydown="if(event.key==='Enter')checkPin()">
+    <button class="btn-login" onclick="checkPin()">Access Dashboard</button>
+    <p class="login-error" id="login-error">Incorrect PIN. Please try again.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <p class="admin-logo">Dermolla</p>
+    <div class="admin-nav-right">
+      <span class="admin-badge">Admin Panel</span>
+      <a class="btn-view-store" href="index.html" target="_blank">View Store →</a>
+      <button class="btn-logout" onclick="logout()">Log Out</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- FORM PANEL -->
+    <div class="form-panel">
+      <p class="panel-title" id="form-title">Add New Product</p>
+      <p class="panel-sub" id="form-sub">Fill in the details below to add a product to your store.</p>
+
+      <input type="hidden" id="edit-id">
+
+      <div class="form-group">
+        <label class="form-label">Brand Name <span>*</span></label>
+        <input class="form-input" type="text" id="f-brand" placeholder="e.g. CeraVe">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Product Name <span>*</span></label>
+        <input class="form-input" type="text" id="f-name" placeholder="e.g. Moisturising Cream">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Skin Concern / Description <span>*</span></label>
+        <input class="form-input" type="text" id="f-concern" placeholder="e.g. Dryness · All skin types">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Price (₦) <span>*</span></label>
+          <div class="price-wrap">
+            <span class="price-prefix">₦</span>
+            <input class="form-input price-input" type="number" id="f-price" placeholder="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stock Status</label>
+          <select class="form-select" id="f-stock">
+            <option value="in">In Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="f-category">
+            <option value="moisturiser">Moisturiser</option>
+            <option value="serum">Serum</option>
+            <option value="cleanser">Cleanser</option>
+            <option value="sunscreen">Sunscreen</option>
+            <option value="body">Body</option>
+            <option value="acne">Acne</option>
+            <option value="brightening">Brightening</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Card Color</label>
+          <select class="form-select" id="f-color">
+            <option value="">Warm (default)</option>
+            <option value="sage">Sage green</option>
+            <option value="white">Light grey</option>
+            <option value="blue">Cool blue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes (internal only)</label>
+        <textarea class="form-textarea" id="f-notes" placeholder="e.g. Supplier, restock date, batch notes..."></textarea>
+      </div>
+
+      <button class="btn-save" onclick="saveProduct()">Save Product →</button>
+      <button class="btn-cancel-edit" id="btn-cancel" onclick="cancelEdit()">Cancel Edit</button>
+
+      <hr class="form-divider">
+      <p style="font-size:0.72rem;color:var(--text-muted);font-weight:300;line-height:1.6;">
+        Products saved here appear automatically on your store. To update a price or stock status, click <strong style="font-weight:500">Edit</strong> next to any product.
+      </p>
+    </div>
+
+    <!-- STOCK LIST PANEL -->
+    <div class="stock-list-panel">
+      <div class="stock-header">
+        <div>
+          <p class="stock-title">Your Products</p>
+          <p class="stock-count" id="stock-count">0 products</p>
+        </div>
+        <input class="search-input" type="text" placeholder="Search products..." oninput="searchProducts(this.value)">
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card"><p class="stat-label">Total Products</p><p class="stat-val" id="stat-total">0</p></div>
+        <div class="stat-card"><p class="stat-label">In Stock</p><p class="stat-val" id="stat-in" style="color:var(--sage)">0</p></div>
+        <div class="stat-card"><p class="stat-label">Low Stock</p><p class="stat-val" id="stat-low" style="color:#856404">0</p></div>
+        <div class="stat-card"><p class="stat-label">Out of Stock</p><p class="stat-val" id="stat-out" style="color:var(--danger)">0</p></div>
+      </div>
+
+      <div id="table-wrap">
+        <table class="product-table" id="product-table">
+          <thead>
+            <tr>
+              <th>Brand & Product</th>
+              <th>Concern</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="product-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="empty-state" style="display:none">
+          <div class="empty-icon">🛍</div>
+          <p class="empty-text">No products yet.<br>Add your first product using the form on the left.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <p class="confirm-title">Delete Product?</p>
+    <p class="confirm-desc" id="confirm-desc">This will remove the product from your store. This cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-del" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const ADMIN_PIN = '1234'; // ← CHANGE THIS TO YOUR PREFERRED PIN
+const STORAGE_KEY = 'dermolla_products';
+
+// ── AUTH ────────────────────────────────────────────────
+function checkPin() {
+  const val = document.getElementById('pin-input').value;
+  if (val === ADMIN_PIN) {
+    sessionStorage.setItem('dermolla_auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadProducts();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').focus();
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('dermolla_auth');
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pin-input').value = '';
+}
+
+window.onload = () => {
+  if (sessionStorage.getItem('dermolla_auth') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadProducts();
+  }
+  document.getElementById('pin-input').focus();
+};
+
+// ── STORAGE ─────────────────────────────────────────────
+function getProducts() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+
+function saveProducts(products) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+}
+
+// ── SAVE / EDIT PRODUCT ─────────────────────────────────
+function saveProduct() {
+  const brand   = document.getElementById('f-brand').value.trim();
+  const name    = document.getElementById('f-name').value.trim();
+  const concern = document.getElementById('f-concern').value.trim();
+  const price   = parseInt(document.getElementById('f-price').value);
+  const stock   = document.getElementById('f-stock').value;
+  const category= document.getElementById('f-category').value;
+  const color   = document.getElementById('f-color').value;
+  const notes   = document.getElementById('f-notes').value.trim();
+  const editId  = document.getElementById('edit-id').value;
+
+  if (!brand || !name || !concern || !price) {
+    showToast('Please fill in all required fields.', false);
+    return;
+  }
+
+  const products = getProducts();
+  const product = { brand, name, concern, price, stock, category, color, notes, id: editId || Date.now().toString() };
+
+  if (editId) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx > -1) products[idx] = product;
+    showToast('Product updated successfully!', true);
+  } else {
+    products.push(product);
+    showToast('Product added to your store!', true);
+  }
+
+  saveProducts(products);
+  resetForm();
+  renderTable(products);
+}
+
+function resetForm() {
+  ['f-brand','f-name','f-concern','f-price','f-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-stock').value = 'in';
+  document.getElementById('f-category').value = 'moisturiser';
+  document.getElementById('f-color').value = '';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('form-title').textContent = 'Add New Product';
+  document.getElementById('form-sub').textContent = 'Fill in the details below to add a product to your store.';
+  document.getElementById('btn-cancel').style.display = 'none';
+  document.querySelectorAll('.product-table tr').forEach(r => r.classList.remove('editing'));
+}
+
+function editProduct(id) {
+  const products = getProducts();
+  const p = products.find(p => p.id === id);
+  if (!p) return;
+
+  document.getElementById('f-brand').value   = p.brand;
+  document.getElementById('f-name').value    = p.name;
+  document.getElementById('f-concern').value = p.concern;
+  document.getElementById('f-price').value   = p.price;
+  document.getElementById('f-stock').value   = p.stock;
+  document.getElementById('f-category').value= p.category || 'moisturiser';
+  document.getElementById('f-color').value   = p.color || '';
+  document.getElementById('f-notes').value   = p.notes || '';
+  document.getElementById('edit-id').value   = p.id;
+
+  document.getElementById('form-title').textContent = 'Edit Product';
+  document.getElementById('form-sub').textContent = `Editing: ${p.brand} ${p.name}`;
+  document.getElementById('btn-cancel').style.display = 'block';
+
+  document.querySelectorAll('.product-table tr').forEach(r => r.classList.remove('editing'));
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (row) row.classList.add('editing');
+
+  document.querySelector('.form-panel').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function cancelEdit() { resetForm(); }
+
+// ── DELETE ───────────────────────────────────────────────
+let pendingDeleteId = null;
+
+function deleteProduct(id) {
+  const products = getProducts();
+  const p = products.find(p => p.id === id);
+  document.getElementById('confirm-desc').textContent = `This will remove "${p?.brand} ${p?.name}" from your store permanently.`;
+  pendingDeleteId = id;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  pendingDeleteId = null;
+}
+
+function confirmDelete() {
+  if (!pendingDeleteId) return;
+  const products = getProducts().filter(p => p.id !== pendingDeleteId);
+  saveProducts(products);
+  renderTable(products);
+  closeConfirm();
+  resetForm();
+  showToast('Product removed from store.', false);
+}
+
+// ── RENDER ───────────────────────────────────────────────
+function loadProducts() {
+  // Seed with existing Dermolla products if first run
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const defaults = [
+      {id:'1',brand:'CeraVe',name:'Moisturising Cream',concern:'Dryness · All skin types',price:23000,stock:'in',category:'moisturiser',color:'',notes:''},
+      {id:'2',brand:'COSRX',name:'Snail Mucin Essence',concern:'Hydration · Repair · Glow',price:16500,stock:'in',category:'serum',color:'sage',notes:''},
+      {id:'3',brand:'Medicube',name:'Red Serum',concern:'Brightening · Anti-aging',price:25000,stock:'in',category:'serum',color:'',notes:''},
+      {id:'4',brand:'Nivea',name:'Body Lotion',concern:'Body · Daily moisture',price:7000,stock:'in',category:'body',color:'white',notes:''},
+      {id:'5',brand:'Skin Aqua',name:'UV Moisture Sunscreen',concern:'Sun protection · SPF 50+',price:15000,stock:'in',category:'sunscreen',color:'blue',notes:''},
+      {id:'6',brand:'Advanced Clinicals',name:'Vitamin C Serum',concern:'Brightening · Dark spots',price:16000,stock:'in',category:'brightening',color:'',notes:''},
+      {id:'7',brand:'COSRX',name:'Snail All in One Cream',concern:'Hydration · Repair · Soothing',price:18500,stock:'in',category:'moisturiser',color:'sage',notes:''},
+      {id:'8',brand:'Tiam',name:'Vita B3 Source',concern:'Niacinamide · Pores · Brightening',price:15000,stock:'in',category:'serum',color:'sage',notes:''},
+      {id:'9',brand:'La Roche-Posay',name:'Anthelios Sunscreen',concern:'SPF 50+ · Sensitive skin',price:23000,stock:'in',category:'sunscreen',color:'blue',notes:''},
+      {id:'10',brand:'Missha',name:'Aqua Sun Essence',concern:'SPF 50+ · Lightweight',price:12999,stock:'in',category:'sunscreen',color:'blue',notes:''},
+      {id:'11',brand:'The Ordinary',name:'Glycolic Acid 7%',concern:'Exfoliation · Texture · Glow',price:30000,stock:'in',category:'brightening',color:'white',notes:''},
+      {id:'12',brand:'Simple',name:'Hydrating Light Moisturiser',concern:'Sensitive skin · Lightweight',price:6000,stock:'in',category:'moisturiser',color:'sage',notes:''},
+      {id:'13',brand:'Simple',name:'Refreshing Facial Wash',concern:'Gentle · Sensitive skin',price:5500,stock:'in',category:'cleanser',color:'sage',notes:''},
+      {id:'14',brand:'Kojie San',name:'Skin Lightening Soap',concern:'Brightening · Dark spots',price:6000,stock:'in',category:'brightening',color:'',notes:''},
+      {id:'15',brand:'PanOxyl',name:'Acne Foaming Wash',concern:'Acne · Benzoyl peroxide 4%',price:19900,stock:'in',category:'acne',color:'white',notes:''},
+      {id:'16',brand:'Menarini',name:'Tretinoin 0.05%',concern:'Acne · Anti-aging · Rx strength',price:6500,stock:'in',category:'acne',color:'white',notes:''},
+      {id:'17',brand:'Olay',name:'Body Lotion',concern:'Body · Moisture · Firming',price:20000,stock:'in',category:'body',color:'',notes:''},
+      {id:'18',brand:'EOS',name:'Body Lotion',concern:'Body · 24hr moisture',price:25000,stock:'in',category:'body',color:'sage',notes:''},
+      {id:'19',brand:'Face Facts',name:'Skincare Range',concern:'Multiple variants available',price:5250,stock:'in',category:'moisturiser',color:'sage',notes:''},
+      {id:'20',brand:'Anua',name:'Heartleaf Collection',concern:'Soothing · Acne · Sensitive skin',price:16000,stock:'in',category:'serum',color:'sage',notes:''},
+    ];
+    saveProducts(defaults);
+  }
+  renderTable(getProducts());
+}
+
+function renderTable(products) {
+  updateStats(products);
+  document.getElementById('stock-count').textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
+
+  const tbody = document.getElementById('product-tbody');
+  const empty = document.getElementById('empty-state');
+
+  if (products.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const stockLabel = { in: ['In Stock','in-stock'], low: ['Low Stock','low-stock'], out: ['Out of Stock','out-stock'] };
+
+  tbody.innerHTML = products.map(p => {
+    const [label, cls] = stockLabel[p.stock] || ['In Stock','in-stock'];
+    return `<tr data-id="${p.id}">
+      <td><p class="td-brand">${p.brand}</p><p class="td-name">${p.name}</p></td>
+      <td><p class="td-concern">${p.concern}</p></td>
+      <td class="td-price">₦${Number(p.price).toLocaleString()}</td>
+      <td><span class="stock-pill ${cls}">${label}</span></td>
+      <td>
+        <button class="action-btn btn-edit" onclick="editProduct('${p.id}')">Edit</button>
+        <button class="action-btn btn-delete" onclick="deleteProduct('${p.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStats(products) {
+  document.getElementById('stat-total').textContent = products.length;
+  document.getElementById('stat-in').textContent  = products.filter(p => p.stock === 'in').length;
+  document.getElementById('stat-low').textContent = products.filter(p => p.stock === 'low').length;
+  document.getElementById('stat-out').textContent = products.filter(p => p.stock === 'out').length;
+}
+
+function searchProducts(query) {
+  const q = query.toLowerCase();
+  const products = getProducts().filter(p =>
+    p.brand.toLowerCase().includes(q) ||
+    p.name.toLowerCase().includes(q) ||
+    p.concern.toLowerCase().includes(q)
+  );
+  renderTable(products);
+}
+
+// ── TOAST ────────────────────────────────────────────────
+function showToast(msg, success = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (success ? ' sage' : '') + ' show';
+  setTimeout(() => t.className = 'toast', 3000);
+}
+</script>
+</body>
+</html>
