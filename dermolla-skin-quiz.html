@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dermolla — Skin Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cocoa: #3D2314;
+  --cocoa-mid: #6B3A22;
+  --cocoa-light: #C4956A;
+  --cocoa-pale: #F5EDE3;
+  --sage: #6B7C5E;
+  --sage-light: #A8B99A;
+  --sage-pale: #EDF0E8;
+  --cream: #FAF6F0;
+  --white: #FFFFFF;
+  --text-dark: #2A1A0E;
+  --text-mid: #5C4033;
+  --text-muted: #8B7355;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 3rem;
+  border-bottom: 0.5px solid rgba(61,35,20,0.12);
+  background: var(--white);
+}
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--cocoa);
+  text-transform: uppercase;
+}
+.nav-back {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--cocoa); }
+
+/* LAYOUT */
+.quiz-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+/* INTRO */
+#intro-screen {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.intro-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 1.2rem;
+}
+.intro-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 300;
+  color: var(--cocoa);
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+.intro-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+}
+.intro-pills {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.8rem;
+}
+.pill {
+  background: var(--sage-pale);
+  border: 0.5px solid rgba(107,124,94,0.25);
+  color: var(--sage);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+}
+.btn-start {
+  background: var(--cocoa);
+  color: var(--cream);
+  border: none;
+  padding: 1.1rem 3rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-block;
+}
+.btn-start:hover { background: var(--cocoa-mid); }
+
+/* PROGRESS */
+.progress-bar-wrap {
+  margin-bottom: 3rem;
+  display: none;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.progress-label span {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.progress-track {
+  height: 2px;
+  background: rgba(61,35,20,0.1);
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--cocoa-light);
+  transition: width 0.4s ease;
+}
+
+/* QUESTION SCREEN */
+#quiz-screen { display: none; }
+
+.question-block { animation: fadeUp 0.4s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-number {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.8rem;
+}
+.q-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  color: var(--cocoa);
+  line-height: 1.25;
+  margin-bottom: 2rem;
+}
+.q-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  margin-top: -1.4rem;
+  margin-bottom: 2rem;
+}
+
+/* OPTIONS */
+.options-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+.options-grid.two-col { grid-template-columns: 1fr 1fr; }
+
+.option-btn {
+  background: var(--white);
+  border: 0.5px solid rgba(61,35,20,0.15);
+  padding: 1.1rem 1.4rem;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  font-weight: 300;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  line-height: 1.5;
+  position: relative;
+}
+.option-btn .opt-label {
+  font-weight: 500;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.option-btn .opt-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.option-btn:hover {
+  border-color: var(--cocoa-light);
+  background: var(--cocoa-pale);
+}
+.option-btn.selected {
+  border-color: var(--cocoa);
+  background: var(--cocoa-pale);
+  color: var(--cocoa);
+}
+.option-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cocoa);
+  font-size: 0.85rem;
+}
+
+/* MULTI SELECT HINT */
+.multi-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+/* NAV BUTTONS */
+.quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.2rem;
+}
+.btn-next {
+  background: var(--cocoa);
+  color: var(--cream);
+  border: none;
+  padding: 0.9rem 2.2rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.btn-next.active { opacity: 1; pointer-events: all; }
+.btn-next.active:hover { background: var(--cocoa-mid); }
+
+.btn-prev {
+  background: transparent;
+  border: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+.btn-prev:hover { color: var(--cocoa); }
+.btn-prev:disabled { opacity: 0.3; cursor: default; }
+
+/* LOADING SCREEN */
+#loading-screen {
+  display: none;
+  text-align: center;
+  padding: 5rem 2rem;
+}
+.loading-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: var(--cocoa);
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+  opacity: 0.4;
+}
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cocoa-light);
+  animation: pulse 1.4s infinite ease-in-out;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.loading-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+}
+
+/* RESULT SCREEN */
+#result-screen { display: none; }
+
+.result-header {
+  text-align: center;
+  padding: 2rem 0 3rem;
+  border-bottom: 0.5px solid rgba(61,35,20,0.1);
+  margin-bottom: 2.5rem;
+}
+.result-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.8rem;
+}
+.result-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  color: var(--cocoa);
+  line-height: 1.15;
+  margin-bottom: 0.6rem;
+}
+.result-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.7;
+}
+.skin-profile-badge {
+  display: inline-block;
+  background: var(--cocoa);
+  color: var(--cream);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+/* AI ANALYSIS */
+.ai-analysis {
+  background: var(--white);
+  border: 0.5px solid rgba(61,35,20,0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+.ai-analysis-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ai-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sage);
+  animation: pulse 2s infinite;
+}
+.ai-text {
+  font-size: 0.92rem;
+  color: var(--text-mid);
+  line-height: 1.85;
+  font-weight: 300;
+}
+
+/* PRODUCTS */
+.products-section { margin-bottom: 2.5rem; }
+.products-section-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 0.5px solid rgba(61,35,20,0.08);
+}
+.product-recs {
+  display: grid;
+  gap: 0.8rem;
+}
+.product-rec-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  background: var(--white);
+  border: 0.5px solid rgba(61,35,20,0.1);
+  padding: 1.2rem;
+  transition: border-color 0.2s;
+}
+.product-rec-card:hover { border-color: var(--cocoa-light); }
+.rec-img {
+  width: 56px; height: 72px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cocoa-pale);
+}
+.rec-img.sage { background: var(--sage-pale); }
+.rec-body { flex: 1; }
+.rec-step {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.2rem;
+}
+.rec-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: var(--cocoa);
+  margin-bottom: 0.15rem;
+}
+.rec-why {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.rec-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--cocoa);
+  white-space: nowrap;
+}
+
+/* VERIFIED BADGE */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--sage-pale);
+  border: 0.5px solid rgba(107,124,94,0.3);
+  color: var(--sage);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  margin-top: 0.3rem;
+}
+
+/* CTA BLOCK */
+.cta-block {
+  background: var(--cocoa);
+  padding: 2.5rem;
+  text-align: center;
+  margin-top: 2.5rem;
+}
+.cta-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  color: var(--cream);
+  font-weight: 300;
+  margin-bottom: 0.6rem;
+}
+.cta-sub {
+  font-size: 0.82rem;
+  color: rgba(250,246,240,0.65);
+  font-weight: 300;
+  margin-bottom: 1.8rem;
+  line-height: 1.6;
+}
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-wa {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 0.9rem 2rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-wa:hover { opacity: 0.88; }
+.btn-shop {
+  background: transparent;
+  border: 0.5px solid rgba(250,246,240,0.35);
+  color: var(--cream);
+  padding: 0.9rem 2rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.btn-shop:hover { border-color: rgba(250,246,240,0.7); }
+
+.retake-link {
+  display: block;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.retake-link:hover { color: var(--cocoa); }
+
+/* TRUST BAR */
+.trust-bar {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 3rem 0;
+  padding: 2rem;
+  border-top: 0.5px solid rgba(61,35,20,0.08);
+  border-bottom: 0.5px solid rgba(61,35,20,0.08);
+}
+.trust-item {
+  text-align: center;
+}
+.trust-icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+.trust-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  nav { padding: 1rem 1.5rem; }
+  .quiz-wrapper { padding: 2.5rem 1.2rem 4rem; }
+  .options-grid.two-col { grid-template-columns: 1fr; }
+  .cta-buttons { flex-direction: column; align-items: stretch; }
+  .product-rec-card { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Dermolla</div>
+  <a class="nav-back" onclick="window.history.back()">← Back to store</a>
+</nav>
+
+<div class="quiz-wrapper">
+
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <p class="intro-eyebrow">Personalized skincare</p>
+    <h1 class="intro-title">Discover your<br><em style="font-style:italic; color:var(--sage);">perfect routine</em></h1>
+    <p class="intro-desc">Answer 6 quick questions and our AI skin advisor will analyze your skin profile and recommend the exact Dermolla products your skin needs.</p>
+    <div class="intro-pills">
+      <span class="pill">Takes 2 minutes</span>
+      <span class="pill">AI-powered analysis</span>
+      <span class="pill">No sign-up needed</span>
+    </div>
+    <div class="trust-bar" style="margin: 0 0 2.5rem;">
+      <div class="trust-item">
+        <div class="trust-icon">🌿</div>
+        <p class="trust-label">Clean formulas</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">✅</div>
+        <p class="trust-label">NAFDAC verified</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🧪</div>
+        <p class="trust-label">Derm-tested</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🇳🇬</div>
+        <p class="trust-label">Made in Nigeria</p>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Begin Skin Quiz →</button>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap" id="progress-bar">
+    <div class="progress-label">
+      <span id="progress-step">Question 1 of 6</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ QUESTIONS -->
+  <div id="quiz-screen"></div>
+
+  <!-- LOADING -->
+  <div id="loading-screen">
+    <div class="loading-logo">Dermolla</div>
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p class="loading-text" id="loading-text">Analyzing your skin profile...</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="result-screen"></div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    id: 'skin_type',
+    text: 'How would you describe your skin?',
+    sub: 'Think about how your skin feels mid-afternoon without any products.',
+    type: 'single',
+    options: [
+      { label: 'Oily', sub: 'Shiny all over, enlarged pores, prone to breakouts' },
+      { label: 'Dry', sub: 'Tight, flaky, rough texture in patches' },
+      { label: 'Combination', sub: 'Oily T-zone (nose, forehead), dry cheeks' },
+      { label: 'Normal / Balanced', sub: 'Generally comfortable, minimal concerns' },
+    ]
+  },
+  {
+    id: 'concern',
+    text: 'What is your main skin concern?',
+    sub: 'Choose up to 2 — we\'ll prioritize accordingly.',
+    type: 'multi',
+    max: 2,
+    options: [
+      { label: 'Dark spots & hyperpigmentation', sub: 'Uneven tone, post-acne marks' },
+      { label: 'Acne & breakouts', sub: 'Active pimples, clogged pores' },
+      { label: 'Dull skin', sub: 'Lack of glow, uneven radiance' },
+      { label: 'Dryness & dehydration', sub: 'Rough texture, tightness' },
+      { label: 'Anti-aging', sub: 'Fine lines, loss of firmness' },
+      { label: 'Sensitive / Reactive skin', sub: 'Redness, irritation, rosacea' },
+    ]
+  },
+  {
+    id: 'skin_tone',
+    text: 'What is your skin tone?',
+    sub: 'This helps us choose formulas that work best for your melanin levels.',
+    type: 'single',
+    options: [
+      { label: 'Fair / Light', sub: '' },
+      { label: 'Medium / Tan', sub: '' },
+      { label: 'Deep / Rich brown', sub: '' },
+      { label: 'Very deep / Dark', sub: '' },
+    ]
+  },
+  {
+    id: 'routine',
+    text: 'What does your current skincare routine look like?',
+    sub: null,
+    type: 'single',
+    options: [
+      { label: 'None — I\'m just starting out', sub: 'I use water or soap only' },
+      { label: 'Basic', sub: 'Just a cleanser and maybe a moisturiser' },
+      { label: 'Intermediate', sub: 'Cleanser, toner, moisturiser, occasional serum' },
+      { label: 'Full routine', sub: 'Multiple steps, I love skincare' },
+    ]
+  },
+  {
+    id: 'sensitivity',
+    text: 'How does your skin react to new products?',
+    sub: null,
+    type: 'single',
+    options: [
+      { label: 'Very sensitive', sub: 'Burns, breaks out, or turns red easily' },
+      { label: 'Moderately sensitive', sub: 'Occasional reactions with strong products' },
+      { label: 'Not very sensitive', sub: 'I can use most products without issue' },
+    ]
+  },
+  {
+    id: 'budget',
+    text: 'What is your monthly skincare budget?',
+    sub: 'We\'ll recommend products within your range.',
+    type: 'single',
+    options: [
+      { label: 'Under ₦5,000', sub: 'Essential basics only' },
+      { label: '₦5,000 – ₦15,000', sub: 'A balanced starter routine' },
+      { label: '₦15,000 – ₦30,000', sub: 'A full curated routine' },
+      { label: 'Above ₦30,000', sub: 'Premium, results-driven products' },
+    ]
+  },
+];
+
+let current = 0;
+let answers = {};
+let multiSelected = {};
+
+function startQuiz() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('progress-bar').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  current = idx;
+  const q = questions[idx];
+  const pct = Math.round((idx / questions.length) * 100);
+
+  document.getElementById('progress-step').textContent = `Question ${idx + 1} of ${questions.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const isMulti = q.type === 'multi';
+  if (isMulti && !multiSelected[q.id]) multiSelected[q.id] = [];
+
+  const twoCol = q.options.length <= 4 && q.options.every(o => !o.sub);
+
+  const html = `
+    <div class="question-block">
+      <p class="q-number">Question ${idx + 1}</p>
+      <h2 class="q-text">${q.text}</h2>
+      ${q.sub ? `<p class="q-sub">${q.sub}</p>` : ''}
+      ${isMulti ? `<p class="multi-hint">Select up to ${q.max}</p>` : ''}
+      <div class="options-grid ${twoCol ? 'two-col' : ''}">
+        ${q.options.map((o, i) => {
+          const isSelected = isMulti
+            ? (multiSelected[q.id] || []).includes(i)
+            : answers[q.id] === i;
+          return `
+            <button class="option-btn ${isSelected ? 'selected' : ''}"
+              onclick="selectOption(${idx}, ${i}, ${isMulti})">
+              <span class="opt-label">${o.label}</span>
+              ${o.sub ? `<span class="opt-sub">${o.sub}</span>` : ''}
+            </button>`;
+        }).join('')}
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-prev" onclick="prevQuestion()" ${idx === 0 ? 'disabled' : ''}>← Back</button>
+        <button class="btn-next ${hasAnswer(q) ? 'active' : ''}" id="btn-next" onclick="nextQuestion()">
+          ${idx === questions.length - 1 ? 'See My Results →' : 'Continue →'}
+        </button>
+      </div>
+    </div>`;
+
+  document.getElementById('quiz-screen').innerHTML = html;
+}
+
+function hasAnswer(q) {
+  if (q.type === 'multi') return (multiSelected[q.id] || []).length > 0;
+  return answers[q.id] !== undefined;
+}
+
+function selectOption(qIdx, optIdx, isMulti) {
+  const q = questions[qIdx];
+  if (isMulti) {
+    const sel = multiSelected[q.id] || [];
+    const pos = sel.indexOf(optIdx);
+    if (pos > -1) {
+      sel.splice(pos, 1);
+    } else if (sel.length < q.max) {
+      sel.push(optIdx);
+    }
+    multiSelected[q.id] = sel;
+    answers[q.id] = sel.map(i => q.options[i].label);
+  } else {
+    answers[q.id] = q.options[optIdx].label;
+  }
+  renderQuestion(qIdx);
+}
+
+function nextQuestion() {
+  if (current < questions.length - 1) {
+    renderQuestion(current + 1);
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQuestion() {
+  if (current > 0) renderQuestion(current - 1);
+}
+
+async function submitQuiz() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('progress-bar').style.display = 'none';
+  document.getElementById('loading-screen').style.display = 'block';
+
+  const loadingMessages = [
+    'Analyzing your skin profile...',
+    'Matching your concerns to our formulas...',
+    'Curating your personalized routine...',
+    'Almost ready...'
+  ];
+  let mi = 0;
+  const lt = setInterval(() => {
+    mi = (mi + 1) % loadingMessages.length;
+    document.getElementById('loading-text').textContent = loadingMessages[mi];
+  }, 1800);
+
+  const prompt = buildPrompt();
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are Dermolla's AI skin advisor — a luxury Nigerian skincare brand. Your role is to analyze a customer's skin quiz answers and provide a warm, expert, personalized skin analysis.
+
+Respond ONLY with valid JSON (no markdown fences) in this exact structure:
+{
+  "skin_profile": "2-4 word profile name e.g. Oily Hyperpigmented Skin",
+  "analysis": "2-3 sentence warm, expert analysis of their skin. Be specific to their answers. Mention melanin, Nigerian climate if relevant.",
+  "routine_intro": "One sentence intro to their recommended routine.",
+  "products": [
+    {
+      "step": "Step label e.g. Step 1 · Cleanse",
+      "name": "Product name",
+      "why": "One sentence why this specific product suits their profile",
+      "price": "Price in Naira e.g. ₦8,500",
+      "img_color": "cocoa or sage"
+    }
+  ],
+  "lifestyle_tip": "One practical skincare lifestyle tip personalized to their answers.",
+  "urgency": "One gentle urgency line e.g. about seasonal skin concerns in Nigeria"
+}
+
+Products to choose from (pick 3-4 most relevant):
+- Radiance Glow Serum (₦12,500) — brightening, niacinamide, for dark spots & hyperpigmentation
+- Deep Hydra Moisturiser (₦9,800) — deep hydration, shea butter, for dry/combo skin
+- Velvet Repair Oil Elixir (₦15,000) — nourishing, rosehip, for mature/dull/dry skin
+- Clear Skin Foaming Cleanser (₦6,500) — gentle, for oily/acne-prone skin
+- Even Tone Face Mask (₦7,200) — turmeric & moringa, brightening treatment
+- Sensitive Skin Barrier Cream (₦10,500) — fragrance-free, for sensitive skin
+- Glow Starter Kit Bundle (₦22,000) — cleanser + serum + moisturiser, great for beginners
+- Dark Spot Corrector Serum (₦13,500) — concentrated vitamin C, for stubborn hyperpigmentation`,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    clearInterval(lt);
+    const data = await resp.json();
+    const text = data.content.map(b => b.text || '').join('');
+
+    let result;
+    try {
+      result = JSON.parse(text.replace(/```json|```/g, '').trim());
+    } catch {
+      result = getFallback();
+    }
+
+    showResult(result);
+  } catch (err) {
+    clearInterval(lt);
+    showResult(getFallback());
+  }
+}
+
+function buildPrompt() {
+  return `Customer quiz answers:
+- Skin type: ${answers.skin_type || 'Not specified'}
+- Main concerns: ${Array.isArray(answers.concern) ? answers.concern.join(', ') : answers.concern || 'Not specified'}
+- Skin tone: ${answers.skin_tone || 'Not specified'}
+- Current routine: ${answers.routine || 'Not specified'}
+- Skin sensitivity: ${answers.sensitivity || 'Not specified'}
+- Monthly budget: ${answers.budget || 'Not specified'}
+
+Please analyze this customer's skin and give personalized product recommendations.`;
+}
+
+function getFallback() {
+  return {
+    skin_profile: 'Balanced Glow Skin',
+    analysis: 'Your skin profile suggests a beautiful balance of needs. Based in Nigeria\'s warm climate, your skin benefits most from lightweight hydration and targeted brightening — two things Dermolla formulates specifically for melanin-rich complexions.',
+    routine_intro: 'Here is your personalized 3-step Dermolla routine:',
+    products: [
+      { step: 'Step 1 · Cleanse', name: 'Clear Skin Foaming Cleanser', why: 'Gently removes impurities without stripping your skin\'s natural oils.', price: '₦6,500', img_color: 'sage' },
+      { step: 'Step 2 · Treat', name: 'Radiance Glow Serum', why: 'Targets uneven tone and boosts radiance with niacinamide and vitamin C.', price: '₦12,500', img_color: 'cocoa' },
+      { step: 'Step 3 · Moisturise', name: 'Deep Hydra Moisturiser', why: 'Locks in serum actives and keeps skin balanced throughout the day.', price: '₦9,800', img_color: 'sage' },
+    ],
+    lifestyle_tip: 'Drink at least 8 glasses of water daily — hydration from within is as important as your topical routine in Nigeria\'s heat.',
+    urgency: 'Harmattan season is when skin dehydration peaks — starting your routine now protects your skin barrier before the dry season begins.'
+  };
+}
+
+function showResult(result) {
+  document.getElementById('loading-screen').style.display = 'none';
+  const el = document.getElementById('result-screen');
+  el.style.display = 'block';
+
+  const totalPrice = result.products.reduce((sum, p) => {
+    const n = parseInt((p.price || '').replace(/[^0-9]/g, ''));
+    return sum + (isNaN(n) ? 0 : n);
+  }, 0);
+
+  el.innerHTML = `
+    <div class="result-header">
+      <div class="skin-profile-badge">Your skin profile</div>
+      <h2 class="result-title">${result.skin_profile}</h2>
+      <p class="result-subtitle">${result.routine_intro}</p>
+    </div>
+
+    <div class="ai-analysis">
+      <p class="ai-analysis-label"><span class="ai-dot"></span> Dermolla AI skin analysis</p>
+      <p class="ai-text">${result.analysis}</p>
+      ${result.lifestyle_tip ? `<p class="ai-text" style="margin-top:1rem; padding-top:1rem; border-top:0.5px solid rgba(61,35,20,0.08);">💡 <em>${result.lifestyle_tip}</em></p>` : ''}
+    </div>
+
+    <div class="products-section">
+      <p class="products-section-title">Your personalized routine — ${result.products.length} products</p>
+      <div class="product-recs">
+        ${result.products.map(p => `
+          <div class="product-rec-card">
+            <div class="rec-img ${p.img_color === 'sage' ? 'sage' : ''}">
+              <svg width="36" height="52" viewBox="0 0 36 52" fill="none">
+                <rect x="5" y="10" width="26" height="38" rx="4" fill="${p.img_color === 'sage' ? '#A8B99A' : '#C4956A'}" opacity="0.5"/>
+                <rect x="9" y="22" width="18" height="18" rx="1" fill="white" opacity="0.7"/>
+                <rect x="11" y="4" width="14" height="8" rx="2" fill="${p.img_color === 'sage' ? '#6B7C5E' : '#6B3A22'}" opacity="0.6"/>
+              </svg>
+            </div>
+            <div class="rec-body">
+              <p class="rec-step">${p.step}</p>
+              <p class="rec-name">${p.name}</p>
+              <p class="rec-why">${p.why}</p>
+              <div class="verified-badge">✅ Dermolla Verified · NAFDAC Registered</div>
+            </div>
+            <div>
+              <p class="rec-price">${p.price}</p>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    ${result.urgency ? `
+    <div style="background:var(--sage-pale); border-left:3px solid var(--sage); padding:1.2rem 1.5rem; margin-bottom:2rem;">
+      <p style="font-size:0.82rem; color:var(--sage); font-weight:300; line-height:1.6;">🌿 ${result.urgency}</p>
+    </div>` : ''}
+
+    <div class="cta-block">
+      <h3 class="cta-title">Ready to start your glow journey?</h3>
+      <p class="cta-sub">Your full routine is ready. Order now on WhatsApp for same-day Abuja & Lagos delivery,<br>or shop directly on our store.</p>
+      <div class="cta-buttons">
+        <button class="btn-wa" onclick="orderOnWhatsApp('${result.skin_profile}', ${JSON.stringify(result.products.map(p=>p.name))})">
+          💬 Order via WhatsApp
+        </button>
+        <button class="btn-shop" onclick="alert('Redirecting to Dermolla store...')">
+          🛍 Shop the Collection
+        </button>
+      </div>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-item">
+        <div class="trust-icon">🚚</div>
+        <p class="trust-label">Free delivery ₦15k+</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">✅</div>
+        <p class="trust-label">NAFDAC registered</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">↩️</div>
+        <p class="trust-label">30-day guarantee</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🌿</div>
+        <p class="trust-label">Clean formula</p>
+      </div>
+    </div>
+
+    <a class="retake-link" onclick="retake()">Retake the quiz with different answers</a>
+  `;
+}
+
+function orderOnWhatsApp(profile, products) {
+  const msg = encodeURIComponent(
+    `Hi Dermolla! 👋\n\nI just completed your Skin Quiz.\n\nMy Skin Profile: ${profile}\n\nRecommended products:\n${products.map((p,i) => `${i+1}. ${p}`).join('\n')}\n\nI'd like to place an order. Please assist! 🌿`
+  );
+  window.open(`https://wa.me/2348000000000?text=${msg}`, '_blank');
+}
+
+function retake() {
+  answers = {};
+  multiSelected = {};
+  current = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('result-screen').innerHTML = '';
+  document.getElementById('progress-bar').style.display = 'none';
+  document.getElementById('intro-screen').style.display = 'block';
+}
+</script>
+</body>
+</html>
